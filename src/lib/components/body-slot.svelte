@@ -1,6 +1,6 @@
 <script>
-	import { slots } from '$lib/global/body-slots.ts';
-	import { onMount } from 'svelte';
+	import { slots } from "$lib/global/body-slots.ts";
+	import { onMount } from "svelte";
 
 	let { children } = $props();
 

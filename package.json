@@ -3,8 +3,8 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev --host",
-		"deno": "deno run -A index.js",
 		"build": "vite build && cp deno.json build/deno.json",
+		"deno": "vite build && cd build && deno serve -A index.js",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -28,18 +28,23 @@
 		"@unocss/transformer-variant-group": "latest",
 		"runed": "^0.15.3",
 		"svelte": "^5.0.0",
-		"svelte-adapter-deno-native": "^0.9.2",
 		"svelte-check": "^4.0.0",
-		"sveltekit-sse": "^0.13.9",
 		"tslib": "^2.4.1",
 		"typescript": "^5.5.0",
 		"unocss": "latest",
 		"unocss-preset-radix": "latest",
 		"vite": "^5.4.4",
+		"vite-plugin-node-polyfills": "^0.22.0",
 		"vitest": "^2.1.4"
 	},
 	"type": "module",
 	"dependencies": {
-		"msgpackr": "^1.11.2"
+		"@rollup/plugin-commonjs": "^28.0.1",
+		"@rollup/plugin-json": "^6.1.0",
+		"@rollup/plugin-node-resolve": "^15.3.0",
+		"@std/ulid": "npm:@jsr/std__ulid",
+		"mitt": "^3.0.1",
+		"msgpackr": "^1.11.2",
+		"rollup": "^4.27.4"
 	}
 }

@@ -1,16 +1,16 @@
 {
-	"short_name": "template",
-	"name": "template",
-	"icons": [
-		{
-			"src": "favicon.png",
-			"type": "image/png",
-			"sizes": "128x128"
-		}
-	],
-	"start_url": "/",
-	"display": "standalone",
-	"display_override": ["window-controls-overlay", "standalone"],
-	"theme_color": "#F0F0F0",
-	"background_color": "#161616"
+  "short_name": "template",
+  "name": "template",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "theme_color": "#F0F0F0",
+  "background_color": "#161616"
 }

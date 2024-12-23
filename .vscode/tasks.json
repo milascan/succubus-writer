@@ -4,7 +4,10 @@
 		{
 			"type": "deno",
 			"command": "run",
-			"args": ["--env-file=.env.example", "dev"],
+			"args": [
+				"--env-file=.env.example",
+				"dev"
+			],
 			"problemMatcher": [
 				"$deno"
 			],
@@ -17,7 +20,9 @@
 		{
 			"type": "deno",
 			"command": "run",
-			"args": ["deno"],
+			"args": [
+				"deno"
+			],
 			"problemMatcher": [
 				"$deno"
 			],

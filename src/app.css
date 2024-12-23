@@ -1,24 +1,24 @@
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-    transition: opacity 400ms;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  transition: opacity 400ms;
 }
 [un-cloak] {
-    opacity: 0;
+  opacity: 0;
 }
 * {
-    scrollbar-width: thin;
-    scrollbar-color: #cccccc transparent;
+  scrollbar-width: thin;
+  scrollbar-color: #cccccc transparent;
 }
 .dark-theme, .dark-theme * {
-    scrollbar-color: #444444 transparent;
+  scrollbar-color: #444444 transparent;
 }
