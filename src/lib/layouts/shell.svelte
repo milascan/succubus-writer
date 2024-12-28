@@ -3,6 +3,10 @@
 	let { children, navs, path } = $props();
 </script>
 
+<svelte:head>
+	<title>{path.at(-1).label}</title>
+</svelte:head>
+
 <Breakpoint min="md">
 	<div
 		class="
