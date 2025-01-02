@@ -36,23 +36,23 @@
         }, 0);
     }
 
+    let timer = null;
     function update_autofill() {
         if (input) {
-            enable = true;
             const p = value.slice(0, input.selectionStart).slice(-16);
-            setTimeout(() => {
-                if (prompt !== p) prompt = p;
-            });
+            if (prompt !== p) prompt = p;
         }
     }
 
-    function oninput(e) {
-        if (!e.isComposing) {
-            enable = true;
+    function request_update() {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
             update_autofill();
-        } else {
-            enable = false;
-        }
+        }, 200);
+    }
+
+    function oninput(e) {
+        request_update();
     }
 
     function onkeydown(e) {
@@ -65,21 +65,28 @@
         }
     }
 
+    function onclick() {
+        enable = true;
+        request_update();
+    }
+
     $effect(async () => {
-        if (!model) model = await get_model("weighted-0_5");
-        async function calc(model) {
-            const p = prompt;
-            const chars = (await predict(model, p))
-                .slice(0, 8)
-                .map((r) => decode_char(r[1]));
-            const predictions = [];
-            for (const head of chars) {
-                const tail = await guess(model, p + head, 6);
-                predictions.push({ head, tail });
+        if (enable) {
+            if (!model) model = await get_model("weighted-0_5");
+            async function calc(model) {
+                const p = prompt;
+                const chars = (await predict(model, p))
+                    .slice(0, 8)
+                    .map((r) => decode_char(r[1]));
+                const predictions = [];
+                for (const head of chars) {
+                    const tail = await guess(model, p + head, 6);
+                    predictions.push({ head, tail });
+                }
+                return predictions;
             }
-            return predictions;
+            predictions = await calc(model);
         }
-        predictions = await calc(model);
     });
 </script>
 
@@ -92,7 +99,9 @@
             bind:value
             {oninput}
             {onkeydown}
-            onclick={update_autofill}
+            {onclick}
+            oncompositionstart={() => (enable = false)}
+            oncompositionend={() => (enable = true)}
         />
         {#if enable && predictions}
             <div
