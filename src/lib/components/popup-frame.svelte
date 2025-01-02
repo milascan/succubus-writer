@@ -1,7 +1,7 @@
 <script>
-	import { fade, fly } from 'svelte/transition';
-	import Backable from './backable.svelte';
-	import BodySlot from './body-slot.svelte';
+	import { fade, fly } from "svelte/transition";
+	import Backable from "./backable.svelte";
+	import BodySlot from "./body-slot.svelte";
 
 	let {
 		visible = $bindable(false),
@@ -9,7 +9,8 @@
 		children,
 		Button,
 		View,
-		class: klass = '',
+		class: klass = "",
+		fill = false,
 		...rest
 	} = $props();
 
@@ -42,14 +43,18 @@
 		>
 			<div
 				transition:fly|global={{ y: 32 }}
-				class="box-fill bg-hue-2 md:(card max-w-screen-sm max-h-[80%] overflow-hidden shadow-lg)"
+				class="box-fill bg-hue-2 md:(card max-w-screen-sm max-h-[80%] overflow-hidden shadow-lg) {fill
+					? 'md:h-full'
+					: ''}"
 			>
 				{#if title}
 					<div
 						class="relative shadow-base-y flex justify-end items-center p-1 text-(base hue-12) font-bold"
 						style="-webkit-app-region:drag"
 					>
-						<div class="absolute-center flex-1 px-2 text-center">{title}</div>
+						<div class="absolute-center flex-1 px-2 text-center">
+							{title}
+						</div>
 						<button
 							aria-label="close popup"
 							class="button button-base flex"
