@@ -31,7 +31,7 @@
     "npm:mitt@^3.0.1": "3.0.1",
     "npm:msgpackr@^1.11.2": "1.11.2",
     "npm:rollup@^4.27.4": "4.27.4",
-    "npm:runed@~0.15.3": "0.15.3_svelte@5.1.10__acorn@8.14.0",
+    "npm:runed@0.22": "0.22.0_svelte@5.16.0__acorn@8.14.0",
     "npm:svelte-check@4": "4.0.5_svelte@5.1.10__acorn@8.14.0_typescript@5.6.3",
     "npm:svelte@5": "5.1.10_acorn@8.14.0",
     "npm:tslib@^2.4.1": "2.8.1",
@@ -519,7 +519,7 @@
         "@types/cookie",
         "cookie",
         "devalue",
-        "esm-env",
+        "esm-env@1.1.4",
         "import-meta-resolve",
         "kleur",
         "magic-string",
@@ -527,7 +527,7 @@
         "sade",
         "set-cookie-parser",
         "sirv@3.0.0",
-        "svelte",
+        "svelte@5.1.10_acorn@8.14.0",
         "tiny-glob",
         "vite"
       ]
@@ -537,7 +537,7 @@
       "dependencies": [
         "@sveltejs/vite-plugin-svelte",
         "debug",
-        "svelte",
+        "svelte@5.1.10_acorn@8.14.0",
         "vite"
       ]
     },
@@ -549,7 +549,7 @@
         "deepmerge",
         "kleur",
         "magic-string",
-        "svelte",
+        "svelte@5.1.10_acorn@8.14.0",
         "vite",
         "vitefu"
       ]
@@ -1081,6 +1081,9 @@
         "safe-buffer@5.2.1"
       ]
     },
+    "clsx@2.1.1": {
+      "integrity": "sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA=="
+    },
     "colorette@2.0.20": {
       "integrity": "sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w=="
     },
@@ -1308,11 +1311,20 @@
     "esm-env@1.1.4": {
       "integrity": "sha512-oO82nKPHKkzIj/hbtuDYy/JHqBHFlMIW36SDiPCVsj87ntDLcWN+sJ1erdVryd4NxODacFTsdrIE3b7IamqbOg=="
     },
+    "esm-env@1.2.1": {
+      "integrity": "sha512-U9JedYYjCnadUlXk7e1Kr+aENQhtUaoaV9+gZm1T8LC/YBAPJx3NSPIAurFOC0U5vrdSevnUJS2/wUVxGwPhng=="
+    },
     "esrap@1.2.2": {
       "integrity": "sha512-F2pSJklxx1BlQIQgooczXCPHmcWpn6EsP5oo73LQfonG9fIlIENQ8vMmfGXeojP9MrkzUNAfyU5vdFlR9shHAw==",
       "dependencies": [
         "@jridgewell/sourcemap-codec",
         "@types/estree"
+      ]
+    },
+    "esrap@1.3.2": {
+      "integrity": "sha512-C4PXusxYhFT98GjLSmb20k9PREuUdporer50dhzGuJu9IJXktbMddVCMLAERl5dAHyAi73GWWCE4FVHGP1794g==",
+      "dependencies": [
+        "@jridgewell/sourcemap-codec"
       ]
     },
     "estree-walker@2.0.2": {
@@ -1536,6 +1548,12 @@
     },
     "is-reference@3.0.2": {
       "integrity": "sha512-v3rht/LgVcsdZa3O2Nqs+NMowLOxeOm7Ay9+/ARQ2F+qEoANRcqrjAZKGN0v8ymUetZGgkp26LTnGT7H0Qo9Pg==",
+      "dependencies": [
+        "@types/estree"
+      ]
+    },
+    "is-reference@3.0.3": {
+      "integrity": "sha512-ixkJoqQvAP88E6wLydLGGqCJsrFUnqoH6HnaczB8XmDH1oaWU+xxdptvikTgaEhtZ53Ky6YXiBuUI2WXLMCwjw==",
       "dependencies": [
         "@types/estree"
       ]
@@ -1965,11 +1983,11 @@
         "fsevents"
       ]
     },
-    "runed@0.15.3_svelte@5.1.10__acorn@8.14.0": {
-      "integrity": "sha512-HtayB+loDcGdqJDHW8JFdsZzGQMyVzim6+s3052MkjZnwmwDstmF+cusMeTssBe6TCdt5i9D/Tb+KYXN3L0kXA==",
+    "runed@0.22.0_svelte@5.16.0__acorn@8.14.0": {
+      "integrity": "sha512-ZWVXWhOr0P5xdNgtviz6D1ivLUDWKLCbeC5SUEJ3zBkqLReVqWHenFxMNFeFaiC5bfxhFxyxzyzB+98uYFtwdA==",
       "dependencies": [
-        "esm-env",
-        "svelte"
+        "esm-env@1.1.4",
+        "svelte@5.16.0_acorn@8.14.0"
       ]
     },
     "sade@1.8.1": {
@@ -2084,7 +2102,7 @@
         "fdir",
         "picocolors",
         "sade",
-        "svelte",
+        "svelte@5.1.10_acorn@8.14.0",
         "typescript"
       ]
     },
@@ -2098,9 +2116,28 @@
         "acorn-typescript",
         "aria-query",
         "axobject-query",
-        "esm-env",
-        "esrap",
+        "esm-env@1.1.4",
+        "esrap@1.2.2",
         "is-reference@3.0.2",
+        "locate-character",
+        "magic-string",
+        "zimmerframe"
+      ]
+    },
+    "svelte@5.16.0_acorn@8.14.0": {
+      "integrity": "sha512-Ygqsiac6UogVED2ruKclU+pOeMThxWtp9LG+li7BXeDKC2paVIsRTMkNmcON4Zejerd1s5sZHWx6ZtU85xklVg==",
+      "dependencies": [
+        "@ampproject/remapping",
+        "@jridgewell/sourcemap-codec",
+        "@types/estree",
+        "acorn",
+        "acorn-typescript",
+        "aria-query",
+        "axobject-query",
+        "clsx",
+        "esm-env@1.2.1",
+        "esrap@1.3.2",
+        "is-reference@3.0.3",
         "locate-character",
         "magic-string",
         "zimmerframe"
@@ -2359,7 +2396,7 @@
         "npm:mitt@^3.0.1",
         "npm:msgpackr@^1.11.2",
         "npm:rollup@^4.27.4",
-        "npm:runed@~0.15.3",
+        "npm:runed@0.22",
         "npm:svelte-check@4",
         "npm:svelte@5",
         "npm:tslib@^2.4.1",

@@ -14,6 +14,10 @@ export default {
     const response = await serveDir(request, {
       fsRoot: dir,
       quiet: true,
+      headers: [
+        "Cross-Origin-Opener-Policy: same-origin",
+        "Cross-Origin-Embedder-Policy: require-corp",
+      ],
     });
     if (response.status < 400) {
       return response;

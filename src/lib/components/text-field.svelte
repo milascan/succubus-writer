@@ -1,8 +1,13 @@
 <script>
-    let { value = $bindable(0), class: klass, ...rest } = $props();
+    let {
+        value = $bindable(0),
+        field = $bindable(),
+        class: klass,
+        ...rest
+    } = $props();
 </script>
 
-<textarea class={klass} bind:value {...rest}></textarea>
+<textarea class={klass} bind:this={field} bind:value {...rest}></textarea>
 
 <style>
     @layer components {
@@ -14,6 +19,7 @@
             background: none;
             font: inherit;
             color: inherit;
+            outline: none;
         }
     }
 </style>

@@ -26,7 +26,6 @@
 		"@unocss/svelte-scoped": "latest",
 		"@unocss/transformer-directives": "latest",
 		"@unocss/transformer-variant-group": "latest",
-		"runed": "^0.15.3",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"tslib": "^2.4.1",
@@ -45,6 +44,7 @@
 		"@std/ulid": "npm:@jsr/std__ulid",
 		"mitt": "^3.0.1",
 		"msgpackr": "^1.11.2",
-		"rollup": "^4.27.4"
+		"rollup": "^4.27.4",
+		"runed": "^0.22.0"
 	}
 }
