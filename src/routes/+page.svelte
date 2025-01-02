@@ -2,7 +2,6 @@
     import TextField from "$lib/components/text-field.svelte";
     import { get_model, predict, decode_char } from "$lib/dnn/model.js";
     import Basic from "$lib/layouts/basic.svelte";
-    import { Debounced } from "runed";
 
     let model = $state();
 
@@ -10,7 +9,6 @@
     let value = $state("");
     let enable = $state(true);
     let prompt = $state("");
-    let debounced = new Debounced(() => prompt, 20);
     let predictions = $state();
 
     async function guess(model, prompt, length) {
@@ -70,7 +68,7 @@
     $effect(async () => {
         if (!model) model = await get_model("weighted-0_5");
         async function calc(model) {
-            const p = debounced.current;
+            const p = prompt;
             const chars = (await predict(model, p))
                 .slice(0, 8)
                 .map((r) => decode_char(r[1]));
