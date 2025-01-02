@@ -2,6 +2,7 @@
     import TextField from "$lib/components/text-field.svelte";
     import { get_model, predict, decode_char } from "$lib/dnn/model.js";
     import Basic from "$lib/layouts/basic.svelte";
+    import { onMount } from "svelte";
 
     let model = $state();
 
@@ -10,6 +11,17 @@
     let enable = $state(true);
     let prompt = $state("");
     let predictions = $state();
+
+    onMount(() => {
+        const key = "writer::value";
+        value = localStorage.getItem(key) ?? "";
+        const timer = setInterval(() => {
+            localStorage.setItem(key, value);
+        }, 60000);
+        return () => {
+            clearInterval(timer);
+        };
+    });
 
     async function guess(model, prompt, length) {
         const res = [];
