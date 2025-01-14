@@ -9,6 +9,7 @@
     let input = $state();
     let value = $state("");
     let enable = $state(true);
+    let hide = $state(true);
     let prompt = $state("");
     let predictions = $state();
 
@@ -46,28 +47,12 @@
         return res.join("");
     }
 
-    function get_sel_pos() {
-        const range = document.getSelection().getRangeAt(0);
-        const children = [...input.childNodes];
-        const head = children
-            .slice(0, children.indexOf(range.startContainer))
-            .map((n) => n.textContent)
-            .join("");
-        return [head.length + range.startOffset, head.length + range.endOffset];
-    }
-
-    function set_sel_pos(offset) {
-        input.textContent = input.textContent;
-        const sel = document.getSelection();
-        sel.setPosition(input.firstChild ?? input, offset);
-    }
-
     function fill(text) {
-        const [start] = get_sel_pos();
-        value = value.slice(0, start) + text + value.slice(start);
+        const [start] = input.get_cursor();
+        input.insert(start, text);
         setTimeout(() => {
             const n_index = start + text.length;
-            set_sel_pos(n_index);
+            input.set_cursor(n_index);
             input.focus();
             request_update();
         }, 0);
@@ -76,7 +61,7 @@
     let timer = null;
     function update_autofill() {
         if (input) {
-            const [start] = get_sel_pos();
+            const [start] = input.get_cursor();
             const p = value.slice(0, start).slice(-16);
             if (prompt !== p) prompt = p;
         }
@@ -86,14 +71,13 @@
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
             update_autofill();
-            const cursor_rect = [
-                ...document.getSelection().getRangeAt(0).getClientRects(),
-            ].at(-1);
+            const cursor_rect = input.get_cursor_rect();
             ime_tar = cursor_rect ?? { x: 8, y: 48, height: 0, disable: true };
         }, 100);
     }
 
     function oninput(e) {
+        hide = false;
         request_update();
     }
 
@@ -114,8 +98,7 @@
     }
 
     function onclick() {
-        enable = true;
-        request_update();
+        hide = true;
     }
 
     $effect(async () => {
@@ -140,8 +123,12 @@
 <Basic class="p-0!">
     <div class="box-fill min-w-0">
         <TextField
-            bind:field={input}
-            class="box-fill p-4 shadow-base-y text-wrap"
+            bind:this={input}
+            class="box-fill"
+            class-field="p-4 text-wrap"
+            placeholder="请输入文本..."
+            autofocus
+            tabindex="0"
             bind:value
             {oninput}
             {onkeydown}
@@ -152,12 +139,12 @@
         <div
             bind:this={ime_elem}
             bind:contentRect={ime_rect}
-            class="hue-pink fixed box card bg-hue-4 divide-(y solid hue-5) text-(sm hue-11)"
+            class="light:hue-green dark:hue-pink fixed box card bg-hue-4 divide-(y solid hue-5A) text-(sm hue-11)"
             style="left: {ime_pos.x}px; top: {ime_pos.y}px; opacity: {ime_tar.disable
                 ? '0'
                 : '1'}"
         >
-            {#if enable && predictions}
+            {#if !hide && enable && predictions}
                 {@const { linear, branch } = predictions}
                 <div class="flex px-2 py-1">
                     <div>{linear[0]}</div>
