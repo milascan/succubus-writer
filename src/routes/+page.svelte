@@ -161,7 +161,6 @@
                 {@const { linear, branch } = predictions}
                 <div class="flex px-2 py-1">
                     <div>{linear[0]}</div>
-                    , disable: true
                     <div class="op-50">{linear.slice(1)}</div>
                 </div>
                 <div class="grid rows-4 grid-flow-col p-1 gap-0.5 font-mono">
