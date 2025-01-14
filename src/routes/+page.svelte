@@ -14,7 +14,7 @@
 
     let ime_elem = $state();
     let ime_rect = $state({ width: 0, height: 0 });
-    let ime_tar = $state({ x: 8, y: 48, height: 0 });
+    let ime_tar = $state({ x: 8, y: 48, height: 0, disable: true });
     let ime_pos = $state({ x: 0, y: 0 });
 
     $effect(() => {
@@ -88,7 +88,7 @@
             const cursor_rect = [
                 ...document.getSelection().getRangeAt(0).getClientRects(),
             ].at(-1);
-            ime_tar = cursor_rect ?? { x: 8, y: 48, height: 0 };
+            ime_tar = cursor_rect ?? { x: 8, y: 48, height: 0, disable: true };
         }, 100);
     }
 
@@ -152,7 +152,9 @@
             bind:this={ime_elem}
             bind:contentRect={ime_rect}
             class="hue-pink fixed box card bg-hue-4 divide-(y solid hue-5) text-(sm hue-11)"
-            style="left: {ime_pos.x}px; top: {ime_pos.y}px"
+            style="left: {ime_pos.x}px; top: {ime_pos.y}px; opacity: {ime_tar.disable
+                ? '0'
+                : '1'}"
         >
             {#if enable && predictions}
                 {@const { linear, branch } = predictions}
