@@ -120,7 +120,7 @@
 
     $effect(async () => {
         if (enable) {
-            if (!model) model = await get_model("weighted-0_5");
+            if (!model) model = await get_model("unweighted");
             async function calc(model) {
                 const p = prompt;
                 const chars = (await predict(model, p))
