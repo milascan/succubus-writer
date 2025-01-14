@@ -12,6 +12,19 @@
     let prompt = $state("");
     let predictions = $state();
 
+    let ime_elem = $state();
+    let ime_rect = $state({ width: 0, height: 0 });
+    let ime_tar = $state({ x: 8, y: 48, height: 0 });
+    let ime_pos = $state({ x: 0, y: 0 });
+
+    $effect(() => {
+        ime_pos.x = Math.min(ime_tar.x, window.innerWidth - ime_rect.width);
+        ime_pos.y =
+            ime_tar.y + ime_tar.height + ime_rect.height > window.innerHeight
+                ? ime_tar.y - ime_rect.height
+                : ime_tar.y + ime_tar.height;
+    });
+
     onMount(() => {
         const key = "writer::value";
         value = localStorage.getItem(key) ?? "";
@@ -33,17 +46,28 @@
         return res.join("");
     }
 
+    function get_sel_pos() {
+        const range = document.getSelection().getRangeAt(0);
+        const children = [...input.childNodes];
+        const head = children
+            .slice(0, children.indexOf(range.startContainer))
+            .map((n) => n.textContent)
+            .join("");
+        return [head.length + range.startOffset, head.length + range.endOffset];
+    }
+
+    function set_sel_pos(offset) {
+        input.textContent = input.textContent;
+        const sel = document.getSelection();
+        sel.setPosition(input.firstChild ?? input, offset);
+    }
+
     function fill(text) {
-        const index = input.selectionStart;
-        value =
-            value.slice(0, input.selectionStart) +
-            text +
-            value.slice(input.selectionStart);
+        const [start] = get_sel_pos();
+        value = value.slice(0, start) + text + value.slice(start);
         setTimeout(() => {
-            const n_index = index + text.length;
-            input.selectionStart = n_index;
-            input.selectionEnd = n_index;
-            update_autofill();
+            const n_index = start + text.length;
+            set_sel_pos(n_index);
             input.focus();
         }, 0);
     }
@@ -51,7 +75,8 @@
     let timer = null;
     function update_autofill() {
         if (input) {
-            const p = value.slice(0, input.selectionStart).slice(-16);
+            const [start] = get_sel_pos();
+            const p = value.slice(0, start).slice(-16);
             if (prompt !== p) prompt = p;
         }
     }
@@ -60,7 +85,11 @@
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
             update_autofill();
-        }, 200);
+            const cursor_rect = [
+                ...document.getSelection().getRangeAt(0).getClientRects(),
+            ].at(-1);
+            ime_tar = cursor_rect ?? { x: 8, y: 48, height: 0 };
+        }, 100);
     }
 
     function oninput(e) {
@@ -69,12 +98,18 @@
 
     function onkeydown(e) {
         if (enable) {
-            const num = Number.parseInt(e.key);
-            if (!Number.isNaN(num)) {
+            if (e.key === "Tab") {
                 e.preventDefault();
-                fill(predictions[num - 1].head);
+                fill(predictions.branch[0]);
+            } else {
+                const num = Number.parseInt(e.key);
+                if (!Number.isNaN(num)) {
+                    e.preventDefault();
+                    fill(predictions.branch[num - 1]);
+                }
             }
         }
+        request_update();
     }
 
     function onclick() {
@@ -90,11 +125,10 @@
                 const chars = (await predict(model, p))
                     .slice(0, 8)
                     .map((r) => decode_char(r[1]));
-                const predictions = [];
-                for (const head of chars) {
-                    const tail = await guess(model, p + head, 6);
-                    predictions.push({ head, tail });
-                }
+                const predictions = {
+                    linear: chars[0] + (await guess(model, p + chars[0], 4)),
+                    branch: chars,
+                };
                 return predictions;
             }
             predictions = await calc(model);
@@ -107,7 +141,6 @@
         <TextField
             bind:field={input}
             class="box-fill p-4 shadow-base-y text-wrap"
-            placeholder="开始撰写..."
             bind:value
             {oninput}
             {onkeydown}
@@ -115,27 +148,36 @@
             oncompositionstart={() => (enable = false)}
             oncompositionend={() => (enable = true)}
         />
-        {#if enable && predictions}
-            <div
-                class="min-w-0 bg-hue-2 p-2 gap-1 font-mono
-                lt-md:(text-lg grid rows-4 grid-flow-col) md:box"
-            >
-                {#each predictions as { head, tail }, index}
-                    {@const key = index + 1}
-                    {@const has_key = key < 10}
-                    <button
-                        class="button flex px-2 py-1 text-start truncate min-w-0"
-                        onclick={() => fill(head)}
-                    >
-                        <div class="text-hue-10">
-                            {has_key ? key + "." : "-."}<span
-                                class="text-hue-12">{head}</span
-                            >
-                        </div>
-                        <div class="text-hue-10">{tail}</div>
-                    </button>
-                {/each}
-            </div>
-        {/if}
+        <div
+            bind:this={ime_elem}
+            bind:contentRect={ime_rect}
+            class="hue-pink fixed box card bg-hue-4 divide-(y solid hue-5) text-(sm hue-11)"
+            style="left: {ime_pos.x}px; top: {ime_pos.y}px"
+        >
+            {#if enable && predictions}
+                {@const { linear, branch } = predictions}
+                <div class="flex px-2 py-1">
+                    <div>{linear[0]}</div>
+                    <div class="op-50">{linear.slice(1)}</div>
+                </div>
+                <div class="grid rows-4 grid-flow-col p-1 gap-0.5 font-mono">
+                    {#each branch as pred, index}
+                        {@const key = index + 1}
+                        {@const has_key = key < 10}
+                        <button
+                            class="button flex gap-1 px-1 py-0.5 text-start"
+                            onclick={() => fill(pred)}
+                        >
+                            <div class="op-50">
+                                {has_key ? key : "-"}
+                            </div>
+                            <div class="op-80">
+                                {pred}
+                            </div>
+                        </button>
+                    {/each}
+                </div>
+            {/if}
+        </div>
     </div>
 </Basic>

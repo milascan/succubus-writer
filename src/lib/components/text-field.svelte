@@ -7,11 +7,17 @@
     } = $props();
 </script>
 
-<textarea class={klass} bind:this={field} bind:value {...rest}></textarea>
+<div
+    class="textarea {klass}"
+    bind:this={field}
+    bind:textContent={value}
+    {...rest}
+    contenteditable="plaintext-only"
+></div>
 
 <style>
     @layer components {
-        textarea {
+        .textarea {
             all: unset;
             display: block;
             height: auto;
@@ -20,6 +26,7 @@
             font: inherit;
             color: inherit;
             outline: none;
+            white-space: pre;
         }
     }
 </style>
