@@ -125,7 +125,7 @@
         <TextField
             bind:this={input}
             class="box-fill"
-            class-field="p-4 text-wrap"
+            class-field="p-4 text-wrap font-mono"
             placeholder="请输入文本..."
             autofocus
             tabindex="0"

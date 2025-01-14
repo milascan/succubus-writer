@@ -32,7 +32,26 @@
         const [start, end] = get_cursor();
         range.setStart(tar, start);
         range.setEnd(tar, end);
-        return [...range.getClientRects()].at(-1);
+        const raw_rect = [...range.getClientRects()].at(-1);
+        const rect = {
+            x: raw_rect.x,
+            y: raw_rect.y,
+            width: raw_rect.width,
+            height: raw_rect.height,
+            bottom: raw_rect.bottom,
+            left: raw_rect.left,
+            right: raw_rect.right,
+            top: raw_rect.top,
+        };
+        const offset_x = field.scrollLeft;
+        const offset_y = field.scrollTop;
+        if (rect) {
+            rect.x -= offset_x;
+            rect.left -= offset_x;
+            rect.y -= offset_y;
+            rect.top -= offset_y;
+        }
+        return rect;
     }
 </script>
 
@@ -62,6 +81,7 @@
             font: inherit;
             color: inherit;
             outline: none;
+            overflow: auto;
             white-space: pre;
             position: absolute;
             inset: 0;
