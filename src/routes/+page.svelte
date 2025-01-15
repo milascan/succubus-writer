@@ -120,6 +120,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Succubus Writer</title>
+</svelte:head>
+
 <Basic class="p-0!">
     <div class="box-fill">
         <div class="box-scroll md:p-4">
