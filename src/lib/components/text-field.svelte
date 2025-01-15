@@ -60,7 +60,7 @@
         bind:this={dummy_elem}
         class="textarea {class_field} op-0 pointer-events-none">{value}​</pre>
     <textarea
-        class="textarea {class_field}"
+        class="textarea pos-absolute inset-0 overflow-hidden {class_field}"
         bind:value
         bind:this={field}
         {...rest}
@@ -71,20 +71,20 @@
     @layer components {
         .root {
             position: relative;
+            height: fit-content !important;
+            min-height: fit-content !important;
         }
         .textarea {
             all: unset;
             display: block;
-            height: auto;
             border: none;
             background: none;
             font: inherit;
             color: inherit;
             outline: none;
-            overflow: auto;
+            resize: none !important;
             white-space: pre;
-            position: absolute;
-            inset: 0;
+            word-break: break-word;
         }
     }
 </style>

@@ -121,25 +121,30 @@
 </script>
 
 <Basic class="p-0!">
-    <div class="box-fill min-w-0">
-        <TextField
-            bind:this={input}
-            class="box-fill"
-            class-field="p-4 text-wrap font-mono"
-            placeholder="请输入文本..."
-            autofocus
-            tabindex="0"
-            bind:value
-            {oninput}
-            {onkeydown}
-            {onclick}
-            oncompositionstart={() => (enable = false)}
-            oncompositionend={() => (enable = true)}
-        />
+    <div class="box-fill">
+        <div class="box-scroll md:p-4">
+            <TextField
+                bind:this={input}
+                class="box-fill md:(w-screen-sm self-center card)"
+                class-field="lt-md:p-4 md:p-8 text-wrap font-mono"
+                placeholder="请输入文本..."
+                autofocus
+                tabindex="0"
+                bind:value
+                {oninput}
+                {onkeydown}
+                {onclick}
+                oncompositionstart={() => (enable = false)}
+                oncompositionend={() => (enable = true)}
+            />
+        </div>
         <div
             bind:this={ime_elem}
             bind:contentRect={ime_rect}
-            class="light:hue-green dark:hue-pink fixed box card bg-hue-4 divide-(y solid hue-5A) text-(sm hue-11)"
+            class="
+                light:hue-green dark:hue-pink
+                box bg-hue-4 divide-(y solid hue-5A) text-(base hue-11)
+                lt-md:(shadow-base-y border-t-(1 solid hue-6!)) md:(fixed card)"
             style="left: {ime_pos.x}px; top: {ime_pos.y}px; opacity: {ime_tar.disable
                 ? '0'
                 : '1'}"
@@ -150,18 +155,24 @@
                     <div>{linear[0]}</div>
                     <div class="op-50">{linear.slice(1)}</div>
                 </div>
-                <div class="grid rows-4 grid-flow-col p-1 gap-0.5 font-mono">
+                <div
+                    class="lt-md:(flex flex-wrap) md:(grid rows-4 grid-flow-col p-1 gap-0.5 font-mono)"
+                >
                     {#each branch as pred, index}
                         {@const key = index + 1}
                         {@const has_key = key < 10}
                         <button
-                            class="button flex gap-1 px-1 py-0.5 text-start"
-                            onclick={() => fill(pred)}
+                            class="button flex gap-1 lt-md:(flex-1 rect! px-2 py-1 text-(xl center)) md:(px-1 py-0.5 text-start)"
+                            onclick={(e) => (fill(pred), e.preventDefault())}
+                            onmousedown={(e) => e.preventDefault()}
+                            onmouseup={(e) => e.preventDefault()}
+                            onpointerdown={(e) => e.preventDefault()}
+                            onpointerup={(e) => e.preventDefault()}
                         >
-                            <div class="op-50">
+                            <div class="op-50 lt-md:hidden">
                                 {has_key ? key : "-"}
                             </div>
-                            <div class="op-80">
+                            <div class="flex-1 op-80">
                                 {pred}
                             </div>
                         </button>
