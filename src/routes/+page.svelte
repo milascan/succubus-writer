@@ -18,6 +18,8 @@
     let ime_tar = $state({ x: 8, y: 48, height: 0, disable: true });
     let ime_pos = $state({ x: 0, y: 0 });
 
+    let scroll_elem = $state();
+
     $effect(() => {
         ime_pos.x = Math.min(ime_tar.x, window.innerWidth - ime_rect.width);
         ime_pos.y =
@@ -79,6 +81,9 @@
     function oninput(e) {
         hide = false;
         request_update();
+        if (input.is_end()) {
+            scroll_elem.scrollTop = scroll_elem.scrollHeight;
+        }
     }
 
     function onkeydown(e) {
@@ -126,11 +131,11 @@
 
 <Basic class="p-0!">
     <div class="box-fill">
-        <div class="box-scroll md:p-4">
+        <div bind:this={scroll_elem} class="box-scroll md:p-4">
             <TextField
                 bind:this={input}
                 class="box-fill md:(w-screen-sm self-center card)"
-                class-field="lt-md:p-4 md:p-8 text-wrap font-mono"
+                class-field="lt-md:p-4 md:(p-8 pb-40vh) text-wrap font-mono"
                 placeholder="请输入文本..."
                 autofocus
                 tabindex="0"

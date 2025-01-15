@@ -53,6 +53,10 @@
         }
         return rect;
     }
+
+    export function is_end() {
+        return get_cursor()[0] === value.length;
+    }
 </script>
 
 <div class="root {klass}">
