@@ -158,16 +158,16 @@
             bind:this={ime_elem}
             bind:contentRect={ime_rect}
             class="
-                light:hue-green dark:hue-pink
+                light:hue-green dark:hue-crimson
                 box bg-hue-4 divide-(y solid hue-5A) text-(base hue-11)
-                lt-md:(shadow-base-y border-t-(1 solid hue-6!)) md:(fixed card)"
+                lt-md:shadow-base-y md:(fixed card)"
             style="left: {ime_pos.x}px; top: {ime_pos.y}px; opacity: {ime_tar.disable
                 ? '0'
                 : '1'}"
         >
             {#if !hide && enable && predictions}
                 {@const { linear, branch } = predictions}
-                <div class="flex px-2 py-1">
+                <div class="flex px-2 py-1 lt-md:text-sm">
                     <div>{linear[0]}</div>
                     <div class="op-50">{linear.slice(1)}</div>
                 </div>
@@ -178,7 +178,7 @@
                         {@const key = index + 1}
                         {@const has_key = key < 10}
                         <button
-                            class="button flex gap-1 lt-md:(flex-1 rect! px-2 py-1 text-(xl center)) md:(px-1 py-0.5 text-start)"
+                            class="button flex gap-1 lt-md:(flex-1 rect! p-2 text-(xl center)) md:(px-1 py-0.5 text-start)"
                             onclick={(e) => (fill(pred), e.preventDefault())}
                             onmousedown={(e) => e.preventDefault()}
                             onmouseup={(e) => e.preventDefault()}
