@@ -34,6 +34,13 @@
         const timer = setInterval(() => {
             localStorage.setItem(key, value);
         }, 60000);
+        setTimeout(() => {
+            scroll_elem.scrollTo({
+                left: 0,
+                top: scroll_elem.scrollHeight,
+                behavior: "instant",
+            });
+        }, 0);
         return () => {
             clearInterval(timer);
         };
