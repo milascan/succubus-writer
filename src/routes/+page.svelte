@@ -1,6 +1,6 @@
 <script>
     import TextField from "$lib/components/text-field.svelte";
-    import { get_model, predict, decode_char } from "$lib/dnn/model.js";
+    import { get_model, predict, decode_char, slice } from "$lib/dnn/model.js";
     import Basic from "$lib/layouts/basic.svelte";
     import { onMount } from "svelte";
 
@@ -71,7 +71,7 @@
     function update_autofill() {
         if (input) {
             const [start] = input.get_cursor();
-            const p = value.slice(0, start).slice(-16);
+            const p = slice(value, start);
             if (prompt !== p) prompt = p;
         }
     }
@@ -88,9 +88,6 @@
     function oninput(e) {
         hide = false;
         request_update();
-        if (input.is_end()) {
-            scroll_elem.scrollTop = scroll_elem.scrollHeight;
-        }
     }
 
     function onkeydown(e) {
@@ -107,6 +104,9 @@
             }
         }
         request_update();
+        if (input.is_end()) {
+            scroll_elem.scrollTop = scroll_elem.scrollHeight;
+        }
     }
 
     function onclick() {
@@ -178,7 +178,7 @@
                         {@const key = index + 1}
                         {@const has_key = key < 10}
                         <button
-                            class="button flex gap-1 lt-md:(flex-1 rect! p-2 text-(xl center)) md:(px-1 py-0.5 text-start)"
+                            class="button fill flex gap-1 lt-md:(flex-1 rect! p-2 text-(xl center)) md:(px-1 py-0.5 text-start)"
                             onclick={(e) => (fill(pred), e.preventDefault())}
                             onmousedown={(e) => e.preventDefault()}
                             onmouseup={(e) => e.preventDefault()}
