@@ -29,7 +29,7 @@ export function slice(str, end) {
   const head = str.slice(0, end);
   let idx = head.length - 1;
   const res = [];
-  while (res.length < max_len) {
+  while (res.length < max_len && idx >= 0) {
     const c = head[idx];
     if (delimiters.test(c) || remove_chars.test(c)) {
       if (res.at(-1) !== pad_char) res.push(pad_char);

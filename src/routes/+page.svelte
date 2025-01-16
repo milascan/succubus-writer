@@ -104,9 +104,11 @@
             }
         }
         request_update();
-        if (input.is_end()) {
-            scroll_elem.scrollTop = scroll_elem.scrollHeight;
-        }
+        setTimeout(() => {
+            if (input.is_end()) {
+                scroll_elem.scrollTop = scroll_elem.scrollHeight;
+            }
+        }, 0);
     }
 
     function onclick() {
