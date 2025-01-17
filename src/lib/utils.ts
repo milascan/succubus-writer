@@ -14,3 +14,16 @@ export const transfer = (data: unknown) =>
       "Content-Type": "application/octet-stream",
     },
   });
+
+export const valid = (...data: unknown[]) =>
+  data.every((d) => d !== undefined && d !== null);
+
+export const array_to_poped = <T>(ary: T[]): [T[], T | undefined] => {
+  return [ary.slice(0, ary.length - 1), ary.at(-1)];
+};
+
+export const array_delete = <T>(ary: T[], value: T) => {
+  const res = ary.indexOf(value);
+  if (res !== -1) return ary.splice(res, 1);
+  return [];
+};
