@@ -75,7 +75,7 @@
     function fill(text) {
         const [start] = input.get_cursor();
         input.insert(start, text);
-        if ($vibrate_dur > 0) navigator.vibrate($vibrate_dur);
+        if ($vibrate_dur > 0) navigator.vibrate?.($vibrate_dur);
         setTimeout(() => {
             const n_index = start + text.length;
             input.set_cursor(n_index);
