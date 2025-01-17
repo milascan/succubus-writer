@@ -5,7 +5,7 @@
     import { storage } from "$lib/core/storage.ts";
     import { get_model, predict, decode_char, slice } from "$lib/dnn/model.js";
     import Basic from "$lib/layouts/basic.svelte";
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
 
     let input = $state();
     let value = $state("");
@@ -50,7 +50,7 @@
         save_timer = setTimeout(() => {
             save_timer = null;
             localStorage.setItem(storage_key, value);
-        }, 3000);
+        }, 2000);
     }
 
     async function guess(model, prompt, length) {
@@ -76,31 +76,45 @@
         const [start] = input.get_cursor();
         input.insert(start, text);
         if ($vibrate_dur > 0) navigator.vibrate?.($vibrate_dur);
-        setTimeout(() => {
-            const n_index = start + text.length;
-            input.set_cursor(n_index);
-            input.focus();
-            request_update();
-        }, 0);
+        const n_index = start + text.length;
+        input.set_cursor(n_index);
+        input.focus();
+        request_update();
     }
 
     let timer = null;
-    function update_autofill() {
+    async function update_autofill() {
         if (input) {
             const [start] = input.get_cursor();
             const p = slice(value, start);
-            if (prompt !== p) prompt = p;
+            if (prompt !== p) {
+                prompt = p;
+                if (enable) {
+                    predictions = await calc(prompt);
+                }
+            }
         }
     }
 
+    let lock = false;
     function request_update() {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-            timer = null;
-            update_autofill();
-            const cursor_rect = input.get_cursor_rect();
-            ime_tar = cursor_rect ?? { x: 8, y: 48, height: 0, disable: true };
-        }, 100);
+        if (lock) return;
+        lock = true;
+        setTimeout(async () => {
+            await tick();
+            await update_autofill();
+            setTimeout(async () => {
+                await tick();
+                const cursor_rect = input.get_cursor_rect();
+                ime_tar = cursor_rect ?? {
+                    x: 8,
+                    y: 48,
+                    height: 0,
+                    disable: true,
+                };
+                lock = false;
+            }, 0);
+        }, 0);
     }
 
     function oninput(e) {
@@ -112,16 +126,18 @@
         if (enable) {
             if (e.key === "Tab") {
                 e.preventDefault();
-                fill(predictions.branch[0]);
+                if (!lock) fill(predictions.branch[0]);
             } else if (e.code.startsWith("Digit")) {
                 const num = Number.parseInt(e.code.slice(5));
                 if (!Number.isNaN(num)) {
                     e.preventDefault();
-                    const idx = num - 1 >= 0 ? num - 1 : 9;
-                    if (!e.shiftKey) {
-                        fill(predictions.branch[idx]);
-                    } else if (predictions.secd_branch?.[idx]) {
-                        fill(predictions.secd_branch[idx]);
+                    if (!lock) {
+                        const idx = num - 1 >= 0 ? num - 1 : 9;
+                        if (!e.shiftKey) {
+                            fill(predictions.branch[idx]);
+                        } else if (predictions.secd_branch?.[idx]) {
+                            fill(predictions.secd_branch[idx]);
+                        }
                     }
                 }
             }
@@ -148,32 +164,21 @@
         return models[name];
     }
 
-    $effect(async () => {
-        prompt;
-        if (enable) {
-            async function calc(prompt) {
-                const model = await prepare_model($model_name.split(",")[0]);
-                const items = await do_predict(model, prompt);
-                const predictions = {
-                    linear:
-                        items[0] +
-                        (await guess(model, prompt + items[0], $predict_len)),
-                    branch: items,
-                };
-                if ($enable_secd) {
-                    const secd_model = await prepare_model(
-                        $model_name.split(",")[1],
-                    );
-                    predictions.secd_branch = await do_predict(
-                        secd_model,
-                        prompt,
-                    );
-                }
-                return predictions;
-            }
-            predictions = await calc(prompt);
+    async function calc(prompt) {
+        const model = await prepare_model($model_name.split(",")[0]);
+        const items = await do_predict(model, prompt);
+        const predictions = {
+            linear:
+                items[0] +
+                (await guess(model, prompt + items[0], $predict_len)),
+            branch: items,
+        };
+        if ($enable_secd) {
+            const secd_model = await prepare_model($model_name.split(",")[1]);
+            predictions.secd_branch = await do_predict(secd_model, prompt);
         }
-    });
+        return predictions;
+    }
 
     $effect(() => {
         value, request_save();
