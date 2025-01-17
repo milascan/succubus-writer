@@ -70,7 +70,7 @@
     }
 
     let vibrate_dur = storage("writer::vibrate_dur", 25);
-    const vibrate_dur_options = [0, 25, 50, 100, 150];
+    const vibrate_dur_options = [0, 15, 25, 50, 100];
 
     function fill(text) {
         const [start] = input.get_cursor();
