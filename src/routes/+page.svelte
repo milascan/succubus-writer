@@ -69,8 +69,8 @@
             .map((r) => decode_char(r[1]));
     }
 
-    let vibrate_dur = storage("writer::vibrate_dur", 200);
-    const vibrate_dur_options = [0, 50, 100, 150, 200, 300, 400];
+    let vibrate_dur = storage("writer::vibrate_dur", 25);
+    const vibrate_dur_options = [0, 25, 50, 100, 150];
 
     function fill(text) {
         const [start] = input.get_cursor();
