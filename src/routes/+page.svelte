@@ -101,24 +101,21 @@
         }
     }
 
-    let lock = false;
+    let lock = null;
     function request_update() {
-        if (lock) return;
-        lock = true;
-        setTimeout(async () => {
+        if (lock) clearTimeout(lock);
+        lock = setTimeout(async () => {
+            lock = null;
             await tick();
             await update_autofill();
-            setTimeout(async () => {
-                await tick();
-                const cursor_rect = input.get_cursor_rect();
-                ime_tar = cursor_rect ?? {
-                    x: 8,
-                    y: 48,
-                    height: 0,
-                    disable: true,
-                };
-                lock = false;
-            }, 0);
+            await tick();
+            const cursor_rect = input.get_cursor_rect();
+            ime_tar = cursor_rect ?? {
+                x: 8,
+                y: 48,
+                height: 0,
+                disable: true,
+            };
         }, 0);
     }
 
@@ -131,11 +128,11 @@
         if (enable) {
             if (e.key === "Tab") {
                 e.preventDefault();
-                if (!lock) fill(predictions.branch[0]);
+                if (lock === null) fill(predictions.branch[0]);
             } else if (e.code.startsWith("Digit")) {
                 const num = Number.parseInt(e.code.slice(5));
                 if (!Number.isNaN(num)) {
-                    if (!lock) {
+                    if (lock === null) {
                         const idx = num - 1 >= 0 ? num - 1 : 9;
                         if (!e.shiftKey) {
                             e.preventDefault();
@@ -396,16 +393,19 @@
                                 button gap-1
                                 lt-md:(flex-1 box items-center rect! fill p-2 text-(xl center))
                                 md:(flex items-baseline px-1 py-0.5 text-start)"
-                            onclick={(e) => (fill(pred), e.preventDefault())}
+                            onclick={secd_branch &&
+                                ((e) => (fill(pred), e.preventDefault()))}
                             onmousedown={(e) => e.preventDefault()}
                             onmouseup={(e) => e.preventDefault()}
-                            onpointerdown={(e) => e.preventDefault()}
+                            onpointerdown={!secd_branch &&
+                                ((e) => (fill(pred), e.preventDefault()))}
                             onpointerup={(e) => e.preventDefault()}
-                            oncontextmenu={(e) => {
-                                const pred = secd_branch?.[index];
-                                if (pred) fill(pred);
-                                e.preventDefault();
-                            }}
+                            oncontextmenu={secd_branch &&
+                                ((e) => {
+                                    const pred = secd_branch[index];
+                                    if (pred) fill(pred);
+                                    e.preventDefault();
+                                })}
                         >
                             <div class="op-50 lt-md:hidden">
                                 {key}
