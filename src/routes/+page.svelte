@@ -154,9 +154,9 @@
         hide = true;
     }
 
-    let model_name = storage("writer::model_name", "unweighted,weighted-0_5");
-    let predict_len = storage("writer::predict_len", 4);
-    let enable_secd = storage("writer::enable_secd", true);
+    let model_name = storage("writer::model_name", "model,model");
+    let predict_len = storage("writer::predict_len", 3);
+    let enable_secd = storage("writer::enable_secd", false);
     let models = {};
 
     async function prepare_model(name) {
@@ -263,23 +263,12 @@
                             <ToggleButton
                                 class={s_toggle_btn}
                                 bind:tree={$model_name}
-                                value="unweighted,weighted-0_5"
+                                value="model,model"
                                 required
                             >
-                                <div>非加权权重</div>
+                                <div>通用模型</div>
                                 <div class="flex-1 text-sm op-50">
-                                    语句更流畅
-                                </div>
-                            </ToggleButton>
-                            <ToggleButton
-                                class={s_toggle_btn}
-                                bind:tree={$model_name}
-                                value="weighted-0_5,unweighted"
-                                required
-                            >
-                                <div>加权权重</div>
-                                <div class="flex-1 text-sm op-50">
-                                    辞藻更丰富
+                                    GPT 模型 速度较慢
                                 </div>
                             </ToggleButton>
                         </div>

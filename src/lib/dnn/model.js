@@ -2,9 +2,7 @@ import * as ort from "./ort.min.js";
 import {
   dict_chars,
   dict_idxs,
-  idx_cls,
   idx_offset,
-  idx_sep,
   idx_unknown,
   input_len,
   max_len,
@@ -46,10 +44,9 @@ function encode(chars) {
   const ids = t_chars.map((c) =>
     (dict_chars[c] ?? idx_unknown - idx_offset) + idx_offset
   );
-  return [idx_cls].concat(
-    Array(input_len - 2 - t_chars.length).fill(idx_unknown),
+  return [].concat(
+    Array(input_len - t_chars.length).fill(idx_unknown),
     ids,
-    [idx_sep],
   );
 }
 
@@ -70,7 +67,7 @@ export async function predict(model, pattern) {
 
 export async function get_model(name) {
   return await ort.InferenceSession.create(
-    `/models/onnx-model.${name}.onnx`,
+    `/models/${name}/model.onnx`,
     {
       executionProviders: ["wasm"],
     },
