@@ -69,7 +69,7 @@ export async function get_model(name) {
   return await ort.InferenceSession.create(
     `/models/${name}/model.onnx`,
     {
-      executionProviders: ["wasm"],
+      executionProviders: ["webgpu", "wasm"],
     },
   );
 }
