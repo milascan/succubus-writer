@@ -85,7 +85,7 @@
             background: none;
             font: inherit;
             color: inherit;
-            outline: none;
+            outline: none !important;
             resize: none !important;
             white-space: pre;
             word-break: break-word;
