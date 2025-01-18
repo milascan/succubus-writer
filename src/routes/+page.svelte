@@ -72,13 +72,18 @@
     let vibrate_dur = storage("writer::vibrate_dur", 25);
     const vibrate_dur_options = [0, 15, 25, 50, 100];
 
-    function fill(text) {
+    async function fill(text) {
         const [start] = input.get_cursor();
-        input.insert(start, text);
+        if (document.execCommand) {
+            document.execCommand("insertText", false, text);
+        } else {
+            input.insert(start, text);
+        }
         if ($vibrate_dur > 0) navigator.vibrate?.($vibrate_dur);
         const n_index = start + text.length;
-        input.set_cursor(n_index);
         input.focus();
+        await tick();
+        input.set_cursor(n_index);
         request_update();
     }
 
@@ -130,12 +135,13 @@
             } else if (e.code.startsWith("Digit")) {
                 const num = Number.parseInt(e.code.slice(5));
                 if (!Number.isNaN(num)) {
-                    e.preventDefault();
                     if (!lock) {
                         const idx = num - 1 >= 0 ? num - 1 : 9;
                         if (!e.shiftKey) {
+                            e.preventDefault();
                             fill(predictions.branch[idx]);
                         } else if (predictions.secd_branch?.[idx]) {
+                            e.preventDefault();
                             fill(predictions.secd_branch[idx]);
                         }
                     }

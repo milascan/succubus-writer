@@ -29,9 +29,9 @@
     export function get_cursor_rect() {
         const range = document.createRange();
         const tar = dummy_elem.firstChild ?? dummy_elem;
-        const [start, end] = get_cursor();
+        const [start] = get_cursor();
         range.setStart(tar, start);
-        range.setEnd(tar, end);
+        range.setEnd(tar, start + 1);
         const raw_rect = [...range.getClientRects()].at(-1);
         const rect = {
             x: raw_rect.x,
