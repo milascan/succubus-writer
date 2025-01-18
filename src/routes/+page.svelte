@@ -106,7 +106,6 @@
         if (lock) clearTimeout(lock);
         lock = setTimeout(async () => {
             lock = null;
-            await tick();
             await update_autofill();
             await tick();
             const cursor_rect = input.get_cursor_rect();
@@ -116,7 +115,7 @@
                 height: 0,
                 disable: true,
             };
-        }, 0);
+        }, 20);
     }
 
     function oninput() {
