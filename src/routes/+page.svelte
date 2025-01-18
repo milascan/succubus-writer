@@ -119,7 +119,7 @@
         }, 0);
     }
 
-    function oninput(e) {
+    function oninput() {
         hide = false;
         request_update();
     }
@@ -364,7 +364,7 @@
                 {onkeydown}
                 {onclick}
                 oncompositionstart={() => (enable = false)}
-                oncompositionend={() => (enable = true)}
+                oncompositionend={() => ((enable = true), oninput())}
             />
         </div>
         <div
