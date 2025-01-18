@@ -89,14 +89,12 @@
 
     let timer = null;
     async function update_autofill() {
-        if (input) {
+        if (input && enable) {
             const [start] = input.get_cursor();
             const p = slice(value, start);
             if (prompt !== p) {
                 prompt = p;
-                if (enable) {
-                    predictions = await calc(prompt);
-                }
+                predictions = await calc(prompt);
             }
         }
     }
@@ -115,7 +113,7 @@
                 height: 0,
                 disable: true,
             };
-        }, 20);
+        }, 0);
     }
 
     function oninput() {
