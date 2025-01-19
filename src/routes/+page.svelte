@@ -12,13 +12,11 @@
     } from "$lib/dnn/model.js";
     import Basic from "$lib/layouts/basic.svelte";
     import { onMount, tick } from "svelte";
-    import { slide } from "svelte/transition";
 
     let input = $state();
     let value = $state("");
     let enable = $state(true);
     let hide = $state(true);
-    let prompt = $state("");
     let code = $state("");
     let predictions = $state();
 
@@ -542,9 +540,11 @@
                                 md:(flex items-baseline px-1 py-0.5 text-start)"
                             onmousedown={(e) => e.preventDefault()}
                             onmouseup={(e) => e.preventDefault()}
-                            onpointerdown={(e) => (
-                                fill(pred[0]), e.preventDefault()
-                            )}
+                            onpointerdown={(e) => {
+                                fill(pred[0]);
+                                code = code.slice(1);
+                                e.preventDefault();
+                            }}
                             onpointerup={(e) => e.preventDefault()}
                         >
                             <div class="op-50 lt-md:hidden">
